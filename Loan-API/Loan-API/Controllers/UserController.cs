@@ -9,7 +9,6 @@ using Loan_API.Domain;
 using Loan_API.Data;
 using Microsoft.AspNetCore.Authorization;
 using Loan_API.Services;
-//using Week17.Helpers;
 using Microsoft.Extensions.Options;
 using System.IdentityModel.Tokens.Jwt;
 using System.Text;

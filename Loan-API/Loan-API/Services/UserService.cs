@@ -27,7 +27,7 @@ namespace Loan_API.Services
             user.FirstName = regData.FirstName;
             user.LastName = regData.LastName;
             user.UserName = regData.UserName;
-            user.Password = regData.Password;
+            user.Password = HashService.HashPassword(regData.Password);
             user.Age = regData.Age;
             user.Salary = regData.Salary;
             _context.Users.Add(user);

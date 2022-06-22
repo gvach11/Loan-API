@@ -37,6 +37,14 @@ namespace Loan_API.Services
                 .Matches(@"[a-z]+").WithMessage("Your password must contain at least one lowercase letter.")
                 .Matches(@"[0-9]+").WithMessage("Your password must contain at least one number.")
                 .Matches(@"[\!\?\*\.]+").WithMessage("Your password must contain at least one (!? *.).");
+            RuleFor(RegistrationModel => RegistrationModel.Age)
+                .NotNull().WithMessage("Age is Mandatory")
+                .GreaterThan(18).WithMessage("Underage users not allowed")
+                .LessThan(100).WithMessage("Age too high");
+            RuleFor(RegistrationModel => RegistrationModel.Salary)
+                .NotNull().WithMessage("Salary is mandatory")
+                .GreaterThan(100).WithMessage("Minimum salary is 100")
+                .LessThan(1000000).WithMessage("Salary too high");
         
     }
 
