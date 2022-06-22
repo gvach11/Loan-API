@@ -20,6 +20,7 @@ namespace Loan_API.Domain
         public bool IsBlocked { get; set; }
         public string Role { get; set; }
         public List<Loan> Loans { get; set; } = new List<Loan>();
+        public string Token { get; set; }
 
 
     }

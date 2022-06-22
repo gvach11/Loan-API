@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Security.Cryptography;
 using System.Text;
-namespace Loan_API.Services
+namespace Loan_API.Helpers
     
 {
     public class HashService

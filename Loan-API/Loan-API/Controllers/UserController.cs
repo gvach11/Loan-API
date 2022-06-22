@@ -18,6 +18,7 @@ using Loan_API.Models;
 
 namespace Loan_API.Controllers
 {
+    [Authorize]
     [Route("api/[controller]")]
     [ApiController]
     public class UserController : ControllerBase
@@ -30,8 +31,9 @@ namespace Loan_API.Controllers
             _userService = userService;
         }
 
-
+        
         //Register
+        [AllowAnonymous]
         [HttpPost("register")]
         public async Task<ActionResult<User>> AddUser(RegistrationModel regData)
         {
@@ -44,6 +46,17 @@ namespace Loan_API.Controllers
             _userService.Register(regData);
             await _context.SaveChangesAsync();
             return Ok("Registration Successful");
+        }
+
+        //Login
+        [AllowAnonymous]
+        [HttpPost("login")]
+        public IActionResult Login(string username, string password)
+        {
+            var user = _userService.Authenticate(username, password);
+            if (user == null) return BadRequest("Username or Password incorrect");
+            _userService.Login(user);
+            return Ok($"Login Successful. Your token: {user.Token}");
         }
     }
 

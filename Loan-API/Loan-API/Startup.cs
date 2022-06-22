@@ -18,6 +18,7 @@ using Newtonsoft.Json;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Loan_API.Helpers;
 
 namespace Loan_API
 {
@@ -46,9 +47,32 @@ namespace Loan_API
 
             services.AddScoped<IUserService, UserService>();
 
-
+            //Handles reference loop exception
             services.AddControllers().AddNewtonsoftJson(options =>
             options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore);
+
+            //Token section
+            var appSettingsSection = Configuration.GetSection("AppSettings");
+            services.Configure<AppSettings>(appSettingsSection);
+            var appSettings = appSettingsSection.Get<AppSettings>();
+            var key = Encoding.ASCII.GetBytes(appSettings.Secret);
+            services.AddAuthentication(x =>
+            {
+                x.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                x.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+            })
+                   .AddJwtBearer(x =>
+                   {
+                       x.RequireHttpsMetadata = false;
+                       x.SaveToken = true;
+                       x.TokenValidationParameters = new TokenValidationParameters
+                       {
+                           ValidateIssuerSigningKey = true,
+                           IssuerSigningKey = new SymmetricSecurityKey(key),
+                           ValidateIssuer = false,
+                           ValidateAudience = false
+                       };
+                   });
 
         }
 
