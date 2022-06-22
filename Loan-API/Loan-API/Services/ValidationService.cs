@@ -1,8 +1,10 @@
 ﻿using FluentValidation;
+using FluentValidation.Results;
 using Loan_API;
 using Loan_API.Data;
 using Loan_API.Domain;
 using Loan_API.Models;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace Loan_API.Services
@@ -12,10 +14,10 @@ namespace Loan_API.Services
         UserContext _context;
         public UserValidator(UserContext context)
         {
-            _context = context;
+            _context = context; 
 
             RuleFor(RegistrationModel => RegistrationModel.FirstName)
-                .Length(1, 50).WithMessage("First Name must containt 1-50 characters")
+                .Length(1, 50).WithMessage("First Name must contain 1-50 characters")
                 .NotNull().WithMessage("First Name is mandatory")
                 .Matches(@"^[a-zA-Z]+$").WithMessage("First Name must only contain letters");
             RuleFor(RegistrationModel => RegistrationModel.LastName)
@@ -23,11 +25,20 @@ namespace Loan_API.Services
                 .NotNull().WithMessage("Last Name is mandatory")
                 .Matches(@"^[a-zA-Z]+$").WithMessage("Last Name must only contain letters");
             RuleFor(RegistrationModel => RegistrationModel.UserName)
-                .Length(1, 50).WithMessage("Last Name must containt 1-50 characters")
-                .NotNull().WithMessage("Last Name is mandatory")
+                .Length(1, 50).WithMessage("Username must containt 1-50 characters")
+                .NotNull().WithMessage("Username is mandatory")
                 .Matches(@"^[a-zA-Z0-9]+$").WithMessage("Username must contain only letters or numbers")
                 .Must(UniqueUserName).WithMessage("Username already exists");
-        }
+            RuleFor(RegistrationModel => RegistrationModel.Password)
+                .Length(8, 50).WithMessage("Password must contain 8-50 characters")
+                .NotNull().WithMessage("Password is mandatory")
+                .MinimumLength(8).WithMessage("Your password length must be at least 8.")
+                .Matches(@"[A-Z]+").WithMessage("Your password must contain at least one uppercase letter.")
+                .Matches(@"[a-z]+").WithMessage("Your password must contain at least one lowercase letter.")
+                .Matches(@"[0-9]+").WithMessage("Your password must contain at least one number.")
+                .Matches(@"[\!\?\*\.]+").WithMessage("Your password must contain at least one (!? *.).");
+        
+    }
 
         private bool UniqueUserName(string name)
         {
@@ -35,6 +46,17 @@ namespace Loan_API.Services
 
             if (uniqueCheck == null) return true;
             return false;
+        }
+
+        public List<string> GetErrors(ValidationResult result)
+        {
+            var fullErrorList = result.Errors.ToList<ValidationFailure>();
+            var errorMessageList = new List<string>();
+            foreach (var i in fullErrorList)
+            {
+                errorMessageList.Add(i.ErrorMessage);
+            }
+            return errorMessageList;
         }
     }
 }

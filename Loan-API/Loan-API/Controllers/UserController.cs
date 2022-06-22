@@ -40,7 +40,7 @@ namespace Loan_API.Controllers
             ValidationResult result = validator.Validate(regData);
             if (!result.IsValid)
             {
-                return BadRequest(result.Errors.FirstOrDefault());
+                return BadRequest(validator.GetErrors(result));
             }
             _userService.Register(regData);
             await _context.SaveChangesAsync();
