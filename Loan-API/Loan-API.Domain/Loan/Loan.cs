@@ -15,7 +15,7 @@ namespace Loan_API.Domain
         public string Currency { get; set; }
         public string Status { get; set; }
         public string Type { get; set; }
-        public TimeSpan Period { get; set; }
+        public int Period { get; set; }
         public User User { get; set; }
 
         

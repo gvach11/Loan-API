@@ -46,6 +46,7 @@ namespace Loan_API
             });
 
             services.AddScoped<IUserService, UserService>();
+            services.AddScoped<ILoanService, LoanService>();
 
             //Handles reference loop exception
             services.AddControllers().AddNewtonsoftJson(options =>
@@ -89,6 +90,7 @@ namespace Loan_API
             app.UseHttpsRedirection();
 
             app.UseRouting();
+            app.UseAuthentication();
 
             app.UseAuthorization();
 
