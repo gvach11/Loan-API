@@ -37,6 +37,7 @@ namespace Loan_API.Controllers
             var claimsIdentity = this.User.Identity as ClaimsIdentity;
             var userIdString = claimsIdentity.FindFirst(ClaimTypes.Name)?.Value;
             var userId = Convert.ToInt32(userIdString);
+            if (_context.Users.Find(userId).IsBlocked == true) return Unauthorized("The user is blocked");
             _loanService.AddLoan(addLoanModel, userId);
             return Ok("Loan Created");
             

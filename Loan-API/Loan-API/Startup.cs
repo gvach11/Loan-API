@@ -48,6 +48,8 @@ namespace Loan_API
             services.AddScoped<IUserService, UserService>();
             services.AddScoped<ILoanService, LoanService>();
 
+
+
             //Handles reference loop exception
             services.AddControllers().AddNewtonsoftJson(options =>
             options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore);
