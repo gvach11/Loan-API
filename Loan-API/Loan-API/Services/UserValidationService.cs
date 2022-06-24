@@ -56,15 +56,6 @@ namespace Loan_API.Services
             return false;
         }
 
-        public List<string> GetErrors(ValidationResult result)
-        {
-            var fullErrorList = result.Errors.ToList<ValidationFailure>();
-            var errorMessageList = new List<string>();
-            foreach (var i in fullErrorList)
-            {
-                errorMessageList.Add(i.ErrorMessage);
-            }
-            return errorMessageList;
-        }
+
     }
 }

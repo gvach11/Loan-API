@@ -15,6 +15,7 @@ using System.Text;
 using Microsoft.IdentityModel.Tokens;
 using System.Security.Claims;
 using Loan_API.Models;
+using Loan_API.Helpers;
 
 namespace Loan_API.Controllers
 {
@@ -41,7 +42,7 @@ namespace Loan_API.Controllers
             ValidationResult result = validator.Validate(regData);
             if (!result.IsValid)
             {
-                return BadRequest(validator.GetErrors(result));
+                return BadRequest(ValidationErrorParse.GetErrors(result));
             }
             _userService.Register(regData);
             await _context.SaveChangesAsync();

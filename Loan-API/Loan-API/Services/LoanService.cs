@@ -17,6 +17,8 @@ namespace Loan_API.Services
     public interface ILoanService
     {
         public Loan AddLoan(AddLoanModel loanModel, int userId);
+        public IQueryable GetOwnLoans(int userId);
+        public Loan UpdateOwnLoan(UpdateLoanModel model);
     }
 
     public class LoanService : ILoanService
@@ -42,5 +44,24 @@ namespace Loan_API.Services
 
         }
 
+        public IQueryable GetOwnLoans(int userId)
+        {
+            return _context.Loans.Where(loan => loan.UserId == userId);
+        }
+
+        public Loan UpdateOwnLoan(UpdateLoanModel model)
+        {
+            var tempLoan = new Loan() { Id = model.LoanId};
+            if (model.LoanType != null) tempLoan.Type = model.LoanType;
+            else tempLoan.Type = _context.Loans.Where(loan => loan.Id == model.LoanId).FirstOrDefault().Type;
+            if (model.Currency != null) tempLoan.Currency = model.Currency;
+            else tempLoan.Currency = _context.Loans.Where(loan => loan.Id == model.LoanId).FirstOrDefault().Currency;
+            if (model.Amount != 0) tempLoan.Amount = model.Amount;
+            else tempLoan.Amount = _context.Loans.Where(loan => loan.Id == model.LoanId).FirstOrDefault().Amount;
+            if (model.LoanPeriod != 0) tempLoan.Period = model.LoanPeriod;
+            else tempLoan.Period = _context.Loans.Where(loan => loan.Id == model.LoanId).FirstOrDefault().Period;
+            return tempLoan;
+
+        }
     }
 }
