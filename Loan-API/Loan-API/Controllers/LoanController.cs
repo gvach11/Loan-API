@@ -74,7 +74,7 @@ namespace Loan_API.Controllers
             var userId = GetUid();
             var tempLoan = _loanService.UpdateOwnLoan(model);
             tempLoan.UserId = userId;
-            if (tempLoan.UserId != _context.Loans.Find(model.LoanId).UserId) return Unauthorized("You are not allowed to modify this loan.Reason: Not your loan");
+            if (tempLoan.UserId != _context.Loans.Find(model.LoanId).UserId) return Unauthorized("You are not allowed to modify this loan. Reason: Not your loan");
             if (tempLoan.Status != LoanStatus.Processing) return Unauthorized("You are not allowed to modify this loan. Reason: Loan already processed");
             var verifiableLoan = validator.ConvertToValidatable(tempLoan);
             var result = validator.Validate(verifiableLoan);
@@ -85,6 +85,19 @@ namespace Loan_API.Controllers
             _context.Loans.Update(tempLoan);
             _context.SaveChanges();
             return Ok("Loan Updated");
+        }
+
+        [Authorize(Roles = Roles.User)]
+        [HttpDelete("deleteownloan")]
+        public async Task<IActionResult> DeleteOwnLoan(DeleteLoanModel model)
+        {
+            var userId = GetUid();
+            IQueryable<Loan> ownLoans = _loanService.GetOwnLoans(userId);
+            var loanToCheck = ownLoans.Where(loan => loan.Id == model.LoanId).FirstOrDefault();
+            if (loanToCheck == null) return NotFound($"Loan not found");
+            if (loanToCheck.Status != LoanStatus.Processing) return Unauthorized("You are not allowed to modify this loan. Reason: Loan already processed");
+            _loanService.DeleteOwnLoan(model.LoanId);
+            return Ok("Loan Deleted");
         }
 
 

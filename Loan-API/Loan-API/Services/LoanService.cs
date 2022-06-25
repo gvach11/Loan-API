@@ -17,8 +17,9 @@ namespace Loan_API.Services
     public interface ILoanService
     {
         public Loan AddLoan(AddLoanModel loanModel, int userId);
-        public IQueryable GetOwnLoans(int userId);
+        public IQueryable<Loan> GetOwnLoans(int userId);
         public Loan UpdateOwnLoan(UpdateLoanModel model);
+        public Loan DeleteOwnLoan(int loanId);
     }
 
     public class LoanService : ILoanService
@@ -44,7 +45,7 @@ namespace Loan_API.Services
 
         }
 
-        public IQueryable GetOwnLoans(int userId)
+        public IQueryable<Loan> GetOwnLoans(int userId)
         {
             return _context.Loans.Where(loan => loan.UserId == userId);
         }
@@ -62,6 +63,14 @@ namespace Loan_API.Services
             else tempLoan.Period = _context.Loans.Where(loan => loan.Id == model.LoanId).FirstOrDefault().Period;
             return tempLoan;
 
+        }
+
+        public Loan DeleteOwnLoan(int loanId)
+        {
+            var loanToDelete = _context.Loans.Find(loanId);
+            _context.Loans.Remove(loanToDelete);
+            _context.SaveChanges();
+            return loanToDelete;
         }
     }
 }
