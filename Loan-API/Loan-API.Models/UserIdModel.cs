@@ -6,8 +6,8 @@ using System.Threading.Tasks;
 
 namespace Loan_API.Models
 {
-    public class DeleteLoanModel
+    public class UserIdModel
     {
-        public int LoanId { get; set; }
+        public int UserId { get; set; }
     }
 }

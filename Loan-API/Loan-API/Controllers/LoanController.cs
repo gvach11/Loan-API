@@ -89,7 +89,7 @@ namespace Loan_API.Controllers
 
         [Authorize(Roles = Roles.User)]
         [HttpDelete("deleteownloan")]
-        public async Task<IActionResult> DeleteOwnLoan(DeleteLoanModel model)
+        public async Task<IActionResult> DeleteOwnLoan(LoanIdModel model)
         {
             var userId = GetUid();
             IQueryable<Loan> ownLoans = _loanService.GetOwnLoans(userId);

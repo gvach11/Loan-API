@@ -47,6 +47,7 @@ namespace Loan_API
 
             services.AddScoped<IUserService, UserService>();
             services.AddScoped<ILoanService, LoanService>();
+            services.AddScoped<IAccountantService, AccountService>();
 
 
 
