@@ -11,12 +11,13 @@ using Microsoft.IdentityModel.Tokens;
 using System.Security.Claims;
 using System;
 using Microsoft.AspNetCore.Http;
+using System.Threading.Tasks;
 
 namespace Loan_API.Services
 {
     public interface IAccountantService
     {
-        public IQueryable<Loan> GetAnyLoan(string loanId);
+        public Task<IQueryable<Loan>> GetAnyLoan(int userId);
         public Loan UpdateAnyLoan(UpdateLoanModel model);
         public Loan DeleteAnyLoan(int loanId);
         public User BlockUser(int userId);
@@ -54,9 +55,9 @@ namespace Loan_API.Services
             throw new NotImplementedException();
         }
 
-        public IQueryable<Loan> GetAnyLoan(string loanId)
+        public async Task <IQueryable<Loan>> GetAnyLoan(int userId)
         {
-            throw new NotImplementedException();
+            return _context.Loans.Where(loan => loan.UserId == userId);
         }
 
         public Loan UpdateAnyLoan(UpdateLoanModel model)

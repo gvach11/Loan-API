@@ -46,5 +46,12 @@ namespace Loan_API.Controllers
             _accountantService.UnblockUser(model.UserId);
             return Ok("User Unblocked");
         }
+
+        [HttpGet("anyuserloans")]
+        public async Task<IActionResult> GetAnyUserLoans(UserIdModel model)
+        {
+            var userLoans = await _accountantService.GetAnyLoan(model.UserId);
+            return Ok(userLoans);
+        }
     }
 }
