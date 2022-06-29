@@ -16,6 +16,7 @@ using Microsoft.IdentityModel.Tokens;
 using System.Security.Claims;
 using Loan_API.Models;
 using Loan_API.Helpers;
+using Microsoft.Extensions.Logging;
 
 namespace Loan_API.Controllers
 {
@@ -26,13 +27,17 @@ namespace Loan_API.Controllers
     {
         private readonly UserContext _context;
         private IUserService _userService;
-        public UserController(UserContext context, IUserService userService)
+        private readonly ILogger<UserController> _logger;
+        public UserController(UserContext context, IUserService userService, ILogger<UserController> logger)
         {
             _context = context;
             _userService = userService;
+            _logger = logger;
+            _logger.LogDebug(1, "NLog injected into HomeController");
+
         }
 
-        
+
         //Register
         [AllowAnonymous]
         [HttpPost("register")]
@@ -42,7 +47,9 @@ namespace Loan_API.Controllers
             ValidationResult result = validator.Validate(regData);
             if (!result.IsValid)
             {
+                _logger.LogError("Validation failed");
                 return BadRequest(ValidationErrorParse.GetErrors(result));
+                
             }
             _userService.Register(regData);
             await _context.SaveChangesAsync();

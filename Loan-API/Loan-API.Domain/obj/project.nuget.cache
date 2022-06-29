@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "dgSpecHash": "S+Qwvh4Zc4mjnoY+0PkPGexWVS9mK3hJkud7ZDTdA4sXmppEiIE4uKBiYrnY2KJTCIJokM8HkY/91tw0hm8gbA==",
+  "dgSpecHash": "hOhrd554PCE4Lhm2SqnFkaYDkK9C32IHCaURCAFIgfJFgUHCSUbwDv9kAmNcCT2FCtWLd6hFeGbP7EutmQvNdg==",
   "success": true,
   "projectFilePath": "C:\\Users\\User\\Desktop\\Loan-API\\Loan-API\\Loan-API.Domain\\Loan-API.Domain.csproj",
   "expectedPackageFiles": [
@@ -40,6 +40,10 @@
     "C:\\Users\\User\\.nuget\\packages\\microsoft.win32.systemevents\\4.7.0\\microsoft.win32.systemevents.4.7.0.nupkg.sha512",
     "C:\\Users\\User\\.nuget\\packages\\newtonsoft.json\\12.0.2\\newtonsoft.json.12.0.2.nupkg.sha512",
     "C:\\Users\\User\\.nuget\\packages\\newtonsoft.json.bson\\1.0.2\\newtonsoft.json.bson.1.0.2.nupkg.sha512",
+    "C:\\Users\\User\\.nuget\\packages\\nlog\\5.0.1\\nlog.5.0.1.nupkg.sha512",
+    "C:\\Users\\User\\.nuget\\packages\\nlog.database\\5.0.1\\nlog.database.5.0.1.nupkg.sha512",
+    "C:\\Users\\User\\.nuget\\packages\\nlog.extensions.logging\\5.0.1\\nlog.extensions.logging.5.0.1.nupkg.sha512",
+    "C:\\Users\\User\\.nuget\\packages\\nlog.web.aspnetcore\\5.0.0\\nlog.web.aspnetcore.5.0.0.nupkg.sha512",
     "C:\\Users\\User\\.nuget\\packages\\runtime.native.system\\4.3.0\\runtime.native.system.4.3.0.nupkg.sha512",
     "C:\\Users\\User\\.nuget\\packages\\system.collections\\4.3.0\\system.collections.4.3.0.nupkg.sha512",
     "C:\\Users\\User\\.nuget\\packages\\system.collections.concurrent\\4.3.0\\system.collections.concurrent.4.3.0.nupkg.sha512",

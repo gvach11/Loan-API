@@ -69,3 +69,8 @@ C:\Users\User\Desktop\Loan-API\Loan-API\Loan-API\bin\Debug\net5.0\Microsoft.AspN
 C:\Users\User\Desktop\Loan-API\Loan-API\Loan-API\bin\Debug\net5.0\Newtonsoft.Json.Bson.dll
 C:\Users\User\Desktop\Loan-API\Loan-API\Loan-API\bin\Debug\net5.0\Loan-API.Models.dll
 C:\Users\User\Desktop\Loan-API\Loan-API\Loan-API\bin\Debug\net5.0\Loan-API.Models.pdb
+C:\Users\User\Desktop\Loan-API\Loan-API\Loan-API\bin\Debug\net5.0\nlog.config
+C:\Users\User\Desktop\Loan-API\Loan-API\Loan-API\bin\Debug\net5.0\NLog.dll
+C:\Users\User\Desktop\Loan-API\Loan-API\Loan-API\bin\Debug\net5.0\NLog.Database.dll
+C:\Users\User\Desktop\Loan-API\Loan-API\Loan-API\bin\Debug\net5.0\NLog.Extensions.Logging.dll
+C:\Users\User\Desktop\Loan-API\Loan-API\Loan-API\bin\Debug\net5.0\NLog.Web.AspNetCore.dll

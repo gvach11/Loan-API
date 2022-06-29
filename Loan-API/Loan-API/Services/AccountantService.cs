@@ -18,22 +18,24 @@ namespace Loan_API.Services
     public interface IAccountantService
     {
         public Task<IQueryable<Loan>> GetAnyLoan(int userId);
-        public Loan UpdateAnyLoan(UpdateLoanModel model);
-        public Loan DeleteAnyLoan(int loanId);
-        public User BlockUser(int userId);
-        public User UnblockUser(int userId);
+        public Task<Loan> UpdateAnyLoan(UpdateLoanModel model);
+        public Task<Loan> DeleteAnyLoan(int loanId);
+        public Task<User> BlockUser(int userId);
+        public Task<User> UnblockUser(int userId);
+        public Task<User> GenerateAccountant();
     }
 
     public class AccountService : IAccountantService
     {
         private UserContext _context;
         private readonly AppSettings _appSettings;
+        private UserService _userService;
         public AccountService(UserContext context, IOptions<AppSettings> appSettings)
         {
             _context = context;
             _appSettings = appSettings.Value;
         }
-        public User BlockUser(int userId)
+        public async Task<User> BlockUser(int userId)
         {
             var tempUser = _context.Users.Find(userId);
             tempUser.IsBlocked = true;
@@ -41,7 +43,7 @@ namespace Loan_API.Services
             _context.SaveChanges();
             return tempUser;
         }
-        public User UnblockUser(int userId)
+        public async Task<User> UnblockUser(int userId)
         {
             var tempUser = _context.Users.Find(userId);
             tempUser.IsBlocked = false;
@@ -50,9 +52,13 @@ namespace Loan_API.Services
             return tempUser;
         }
 
-        public Loan DeleteAnyLoan(int loanId)
+        public async Task<Loan> DeleteAnyLoan(int loanId)
         {
-            throw new NotImplementedException();
+
+            var loanToDelete = _context.Loans.Find(loanId);
+            _context.Loans.Remove(loanToDelete);
+            _context.SaveChanges();
+            return loanToDelete;
         }
 
         public async Task <IQueryable<Loan>> GetAnyLoan(int userId)
@@ -60,9 +66,37 @@ namespace Loan_API.Services
             return _context.Loans.Where(loan => loan.UserId == userId);
         }
 
-        public Loan UpdateAnyLoan(UpdateLoanModel model)
+        public async Task<Loan> UpdateAnyLoan(UpdateLoanModel model)
         {
-            throw new NotImplementedException();
+            var tempLoan = _context.Loans.Find(model.LoanId);
+            if (model.LoanType != null) tempLoan.Type = model.LoanType;
+            else tempLoan.Type = _context.Loans.Where(loan => loan.Id == model.LoanId).FirstOrDefault().Type;
+            if (model.Currency != null) tempLoan.Currency = model.Currency;
+            else tempLoan.Currency = _context.Loans.Where(loan => loan.Id == model.LoanId).FirstOrDefault().Currency;
+            if (model.Amount != 0) tempLoan.Amount = model.Amount;
+            else tempLoan.Amount = _context.Loans.Where(loan => loan.Id == model.LoanId).FirstOrDefault().Amount;
+            if (model.LoanPeriod != 0) tempLoan.Period = model.LoanPeriod;
+            else tempLoan.Period = _context.Loans.Where(loan => loan.Id == model.LoanId).FirstOrDefault().Period;
+            return tempLoan;
+        }
+
+        public async Task<User> GenerateAccountant()
+        {
+            var accountant = new User()
+            {
+                FirstName = "FirstName",
+                LastName = "LastName",
+                Age = 30,
+                Salary = 999,
+                UserName = "Accountant",
+                Password = HashService.HashPassword("12345"),
+                Role = "Accountant",
+                IsBlocked = false
+            };
+            _context.Users.Add(accountant);
+            _context.SaveChanges();
+            return accountant;
+
         }
     }
 }

@@ -94,7 +94,7 @@ namespace Loan_API.Controllers
             var userId = GetUid();
             IQueryable<Loan> ownLoans = _loanService.GetOwnLoans(userId);
             var loanToCheck = ownLoans.Where(loan => loan.Id == model.LoanId).FirstOrDefault();
-            if (loanToCheck == null) return NotFound($"Loan not found");
+            if (loanToCheck == null) return UnprocessableEntity($"Loan not found");
             if (loanToCheck.Status != LoanStatus.Processing) return Unauthorized("You are not allowed to modify this loan. Reason: Loan already processed");
             _loanService.DeleteOwnLoan(model.LoanId);
             return Ok("Loan Deleted");

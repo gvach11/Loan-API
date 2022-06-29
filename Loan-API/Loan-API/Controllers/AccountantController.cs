@@ -14,6 +14,7 @@ using System.Security.Claims;
 using Loan_API.Models;
 using Loan_API.Helpers;
 using System.Threading.Tasks;
+using System.Linq;
 
 namespace Loan_API.Controllers
 {
@@ -24,34 +25,75 @@ namespace Loan_API.Controllers
     {
         private readonly UserContext _context;
         private IAccountantService _accountantService;
-        public AccountantController(UserContext context, IAccountantService accountantService)
+        private IUserService _userService;
+        public AccountantController(UserContext context, IAccountantService accountantService, IUserService userService)
         {
             _context = context;
             _accountantService = accountantService;
+            _userService = userService;
         }
 
 
         [HttpPut("blockuser")]
         public async Task<IActionResult> BlockUser(UserIdModel model)
         {
-            if (_context.Users.Find(model.UserId) == null) return NotFound("User not found");
-            _accountantService.BlockUser(model.UserId);
+            if (_context.Users.Find(model.UserId) == null) return UnprocessableEntity("User not found");
+            await _accountantService.BlockUser(model.UserId);
             return Ok("User Blocked");
         }
 
         [HttpPut("unblockuser")]
         public async Task<IActionResult> UnblockUser(UserIdModel model)
         {
-            if (_context.Users.Find(model.UserId) == null) return NotFound("User not found");
-            _accountantService.UnblockUser(model.UserId);
+            if (_context.Users.Find(model.UserId) == null) return UnprocessableEntity("User not found");
+            await _accountantService.UnblockUser(model.UserId);
             return Ok("User Unblocked");
         }
 
         [HttpGet("anyuserloans")]
         public async Task<IActionResult> GetAnyUserLoans(UserIdModel model)
         {
+            if (_context.Users.Find(model.UserId) == null) return UnprocessableEntity("User not found");
             var userLoans = await _accountantService.GetAnyLoan(model.UserId);
             return Ok(userLoans);
         }
+
+        [HttpDelete("deleteanyloan")]
+        public async Task<IActionResult> DeleteAnyLoan(LoanIdModel model)
+        {
+            if (_context.Loans.Find(model.LoanId) == null) return UnprocessableEntity("Loan not found");
+            await _accountantService.DeleteAnyLoan(model.LoanId);
+            return Ok("Loan Deleted");
+        }
+
+        [HttpPut("updateanyloan")]
+        public async Task<IActionResult> UpdateAnyLoan(UpdateLoanModel model)
+        {
+            if (_context.Loans.Find(model.LoanId) == null) return UnprocessableEntity("Loan not found");
+            LoanValidator validator = new LoanValidator(_context);
+            var tempLoan = await _accountantService.UpdateAnyLoan(model);
+            var verifiableLoan = validator.ConvertToValidatable(tempLoan);
+            var result = validator.Validate(verifiableLoan);
+            if (!result.IsValid)
+            {
+                return BadRequest(ValidationErrorParse.GetErrors(result));
+            }
+            _context.Loans.Update(tempLoan);
+            _context.SaveChanges();
+            return Ok("Loan Updated");
+        }
+        [AllowAnonymous]
+        [HttpPost("generateaccountant")]
+        public async Task<IActionResult> GenerateAccountant()
+        {
+            var accountant = await _accountantService.GenerateAccountant();
+            var tokenString = _userService.GenerateToken(accountant);
+            accountant.Token = tokenString;
+            _context.Users.Update(accountant);
+            _context.SaveChanges();
+            return Ok($"Accountant created, your Credentials: Username: Accountant" +
+                $"Password: 12345"+
+                $"Token: {accountant.Token}");
+        } 
     }
 }
