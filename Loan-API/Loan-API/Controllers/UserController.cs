@@ -33,7 +33,6 @@ namespace Loan_API.Controllers
             _context = context;
             _userService = userService;
             _logger = logger;
-            _logger.LogDebug(1, "NLog injected into HomeController");
 
         }
 
@@ -47,7 +46,10 @@ namespace Loan_API.Controllers
             ValidationResult result = validator.Validate(regData);
             if (!result.IsValid)
             {
-                _logger.LogError("Validation failed");
+                foreach (var error in ValidationErrorParse.GetErrors(result))
+                {
+                    _logger.LogError(error);
+                }
                 return BadRequest(ValidationErrorParse.GetErrors(result));
                 
             }
@@ -62,7 +64,9 @@ namespace Loan_API.Controllers
         public IActionResult Login(string username, string password)
         {
             var user = _userService.Authenticate(username, password);
-            if (user == null) return BadRequest("Username or Password incorrect");
+            if (user == null) {
+                _logger.LogError("Username or Password incorrect");
+                return BadRequest("Username or Password incorrect"); }
             _userService.Login(user);
             return Ok($"Login Successful. Your token: {user.Token}");
         }

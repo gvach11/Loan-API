@@ -16,6 +16,7 @@ using Microsoft.IdentityModel.Tokens;
 using System.Security.Claims;
 using Loan_API.Models;
 using Loan_API.Helpers;
+using Microsoft.Extensions.Logging;
 
 namespace Loan_API.Controllers
 {
@@ -27,10 +28,13 @@ namespace Loan_API.Controllers
     {
         private readonly UserContext _context;
         private ILoanService _loanService;
-        public LoanController(UserContext context, ILoanService loanService)
+        private readonly ILogger<LoanController> _logger;
+
+        public LoanController(UserContext context, ILoanService loanService, ILogger<LoanController> logger)
         {
             _context = context;
             _loanService = loanService;
+            _logger = logger;
         }
 
         internal int GetUid()
@@ -49,10 +53,16 @@ namespace Loan_API.Controllers
             var result = validator.Validate(addLoanModel);
             if (!result.IsValid)
             {
+                foreach (var error in (ValidationErrorParse.GetErrors(result)))
+                {
+                    _logger.LogError(error);
+                }
                 return BadRequest(ValidationErrorParse.GetErrors(result));
             }
             var userId = GetUid();
-            if (_context.Users.Find(userId).IsBlocked == true) return Unauthorized("The user is blocked");
+            if (_context.Users.Find(userId).IsBlocked == true) {
+                _logger.LogError("User blocked");
+                return Unauthorized("The user is blocked"); }
             _loanService.AddLoan(addLoanModel, userId);
             return Ok("Loan Created");
             
@@ -74,8 +84,16 @@ namespace Loan_API.Controllers
             var userId = GetUid();
             var tempLoan = _loanService.UpdateOwnLoan(model);
             tempLoan.UserId = userId;
-            if (tempLoan.UserId != _context.Loans.Find(model.LoanId).UserId) return Unauthorized("You are not allowed to modify this loan. Reason: Not your loan");
-            if (tempLoan.Status != LoanStatus.Processing) return Unauthorized("You are not allowed to modify this loan. Reason: Loan already processed");
+            if (tempLoan.UserId != _context.Loans.Find(model.LoanId).UserId) 
+            {
+                _logger.LogError("Not own loan");
+                return Unauthorized("You are not allowed to modify this loan. Reason: Not your loan"); 
+            }
+            if (tempLoan.Status != LoanStatus.Processing)
+            {
+                _logger.LogError("Loan already processed");
+                return Unauthorized("You are not allowed to modify this loan. Reason: Loan already processed");
+            }
             var verifiableLoan = validator.ConvertToValidatable(tempLoan);
             var result = validator.Validate(verifiableLoan);
             if (!result.IsValid)
@@ -94,8 +112,16 @@ namespace Loan_API.Controllers
             var userId = GetUid();
             IQueryable<Loan> ownLoans = _loanService.GetOwnLoans(userId);
             var loanToCheck = ownLoans.Where(loan => loan.Id == model.LoanId).FirstOrDefault();
-            if (loanToCheck == null) return UnprocessableEntity($"Loan not found");
-            if (loanToCheck.Status != LoanStatus.Processing) return Unauthorized("You are not allowed to modify this loan. Reason: Loan already processed");
+            if (loanToCheck == null)
+            {
+                _logger.LogError("Loan not found");
+                return UnprocessableEntity("Loan not found");
+            }
+            if (loanToCheck.Status != LoanStatus.Processing)
+            {
+                _logger.LogError("Loan already processed");
+                return Unauthorized("You are not allowed to modify this loan. Reason: Loan already processed");
+            }
             _loanService.DeleteOwnLoan(model.LoanId);
             return Ok("Loan Deleted");
         }

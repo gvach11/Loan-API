@@ -15,6 +15,7 @@ using Loan_API.Models;
 using Loan_API.Helpers;
 using System.Threading.Tasks;
 using System.Linq;
+using Microsoft.Extensions.Logging;
 
 namespace Loan_API.Controllers
 {
@@ -26,18 +27,25 @@ namespace Loan_API.Controllers
         private readonly UserContext _context;
         private IAccountantService _accountantService;
         private IUserService _userService;
-        public AccountantController(UserContext context, IAccountantService accountantService, IUserService userService)
+        private readonly ILogger<AccountantController> _logger;
+        public AccountantController(UserContext context, IAccountantService accountantService, IUserService userService,
+            ILogger<AccountantController> logger)
         {
             _context = context;
             _accountantService = accountantService;
             _userService = userService;
+            _logger = logger;
         }
 
 
         [HttpPut("blockuser")]
         public async Task<IActionResult> BlockUser(UserIdModel model)
         {
-            if (_context.Users.Find(model.UserId) == null) return UnprocessableEntity("User not found");
+            if (_context.Users.Find(model.UserId) == null)
+            {
+                _logger.LogError("User not found");
+                return UnprocessableEntity("User not found");
+            }
             await _accountantService.BlockUser(model.UserId);
             return Ok("User Blocked");
         }
@@ -45,7 +53,11 @@ namespace Loan_API.Controllers
         [HttpPut("unblockuser")]
         public async Task<IActionResult> UnblockUser(UserIdModel model)
         {
-            if (_context.Users.Find(model.UserId) == null) return UnprocessableEntity("User not found");
+            if (_context.Users.Find(model.UserId) == null)
+            {
+                _logger.LogError("User not found");
+                return UnprocessableEntity("User not found");
+            }
             await _accountantService.UnblockUser(model.UserId);
             return Ok("User Unblocked");
         }
@@ -53,7 +65,11 @@ namespace Loan_API.Controllers
         [HttpGet("anyuserloans")]
         public async Task<IActionResult> GetAnyUserLoans(UserIdModel model)
         {
-            if (_context.Users.Find(model.UserId) == null) return UnprocessableEntity("User not found");
+            if (_context.Users.Find(model.UserId) == null)
+            {
+                _logger.LogError("User not found");
+                return UnprocessableEntity("User not found");
+            }
             var userLoans = await _accountantService.GetAnyLoan(model.UserId);
             return Ok(userLoans);
         }
@@ -61,7 +77,11 @@ namespace Loan_API.Controllers
         [HttpDelete("deleteanyloan")]
         public async Task<IActionResult> DeleteAnyLoan(LoanIdModel model)
         {
-            if (_context.Loans.Find(model.LoanId) == null) return UnprocessableEntity("Loan not found");
+            if (_context.Loans.Find(model.LoanId) == null)
+            {
+                _logger.LogError("Loan not found");
+                return UnprocessableEntity("Loan not found");
+            }
             await _accountantService.DeleteAnyLoan(model.LoanId);
             return Ok("Loan Deleted");
         }
@@ -69,7 +89,11 @@ namespace Loan_API.Controllers
         [HttpPut("updateanyloan")]
         public async Task<IActionResult> UpdateAnyLoan(UpdateLoanModel model)
         {
-            if (_context.Loans.Find(model.LoanId) == null) return UnprocessableEntity("Loan not found");
+            if (_context.Loans.Find(model.LoanId) == null)
+            {
+                _logger.LogError("Loan not found");
+                return UnprocessableEntity("Loan not found");
+            }
             LoanValidator validator = new LoanValidator(_context);
             var tempLoan = await _accountantService.UpdateAnyLoan(model);
             var verifiableLoan = validator.ConvertToValidatable(tempLoan);
