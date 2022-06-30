@@ -18,7 +18,7 @@ namespace Loan_API.Services
     {
         public Task <User> Register(RegistrationModel user);
         User Authenticate(string username, string password);
-        User Login(User user);
+        public Task<User> Login(User user);
         User GetOwnData();
         string GenerateToken(User user);
     }
@@ -85,7 +85,7 @@ namespace Loan_API.Services
             return tokenString;
         }
 
-        public User Login(User user)
+        public async Task<User> Login(User user)
         {
 
             if (user == null) return null;
@@ -98,7 +98,7 @@ namespace Loan_API.Services
             user.Token = tokenString;
             currentrecord.Token = tokenString;
             _context.Users.Update(currentrecord);
-            _context.SaveChanges();
+            await _context.SaveChangesAsync();
             return user;
         }
 

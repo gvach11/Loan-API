@@ -73,11 +73,11 @@ namespace Loan_API.Controllers
 
         [Authorize(Roles = Roles.User)]
         [HttpPut("updateownloan")]
-        public IActionResult UpdateOwnLoan(UpdateLoanModel model)
+        public async Task <IActionResult> UpdateOwnLoan(UpdateLoanModel model)
         {
             LoanValidator validator = new LoanValidator(_context);
             var userId = _userService.GetOwnData().Id;
-            var tempLoan = _loanService.UpdateOwnLoan(model);
+            var tempLoan = _loanService.UpdateOwnLoan(model).Result;
             tempLoan.UserId = userId;
             if (tempLoan.UserId != _context.Loans.Find(model.LoanId).UserId) 
             {
@@ -96,7 +96,7 @@ namespace Loan_API.Controllers
                 return BadRequest(ValidationErrorParse.GetErrors(result));
             }
             _context.Loans.Update(tempLoan);
-            _context.SaveChanges();
+            await _context.SaveChangesAsync();
             return Ok("Loan Updated");
         }
 

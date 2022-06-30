@@ -14,6 +14,7 @@ using Loan_API.Helpers;
 using System.Collections.Generic;
 using MockQueryable.Moq;
 using Loan_API.Tests.FakeServices;
+using Loan_API.Models;
 
 namespace Loan_API.Tests
 {
@@ -33,6 +34,31 @@ namespace Loan_API.Tests
 
             var result = _service.Authenticate(username, password);
             Assert.Null(result);
+        }
+
+        [Fact]
+        public void GetUserResultShouldBeEqualToUser()
+        {
+            var idToCompare = 1;
+            var result = _service.GetOwnData();
+            Assert.Equal(result.Id, idToCompare);
+
+        }
+        [Fact]
+        public void TokenShouldBeGenerated()
+        {
+            var user = new User() { Id = 1, Role = "User" };
+            _service.Login(user);
+
+            Assert.NotNull(user.Token);
+        }
+
+        [Fact]
+        public void UserShouldBeGenerated()
+        {
+            RegistrationModel model = new RegistrationModel() { Age = 10, FirstName = "test", LastName = "test", Password = "test" };
+            var result = _service.Register(model);
+            Assert.NotNull(result);
         }
     }
 }

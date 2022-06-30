@@ -40,22 +40,37 @@ namespace Loan_API.Tests.FakeServices
 
         public string GenerateToken(User user)
         {
-            throw new NotImplementedException();
+            var token = "this is a token";
+            return token;
         }
 
         public User GetOwnData()
         {
-            throw new NotImplementedException();
+            var user = new User() { Id = 1 };
+            var users = new List<User> { new User { Id = 1},
+            new User{ Id = 2},
+            new User {Id = 3}};
+            var result = users.Where(user => user.Id == user.Id).FirstOrDefault();
+            return result;
         }
 
-        public User Login(User user)
+        public async Task<User> Login(User user)
         {
-            throw new NotImplementedException();
+            var tokenString = GenerateToken(user);
+            user.Token = tokenString;
+            return user;
         }
 
-        public async Task<User> Register(RegistrationModel user)
+        public async Task<User> Register(RegistrationModel regData)
         {
-            throw new NotImplementedException();
+            var user = new User();
+            user.FirstName = regData.FirstName;
+            user.LastName = regData.LastName;
+            user.UserName = regData.UserName;
+            user.Password = HashService.HashPassword(regData.Password);
+            user.Age = regData.Age;
+            user.Salary = regData.Salary;
+            return user;
         }
     }
 }

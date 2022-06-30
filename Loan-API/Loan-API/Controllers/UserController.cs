@@ -53,7 +53,7 @@ namespace Loan_API.Controllers
                 return BadRequest(ValidationErrorParse.GetErrors(result));
                 
             }
-            _userService.Register(regData);
+            await _userService.Register(regData);
             await _context.SaveChangesAsync();
             return Ok("Registration Successful");
         }
@@ -61,13 +61,13 @@ namespace Loan_API.Controllers
         //Login
         [AllowAnonymous]
         [HttpPost("login")]
-        public IActionResult Login(LoginModel model)
+        public async Task <IActionResult> Login(LoginModel model)
         {
             var user = _userService.Authenticate(model.UserName, model.Password);
             if (user == null) {
                 _logger.LogError("Username or Password incorrect");
                 return BadRequest("Username or Password incorrect"); }
-            _userService.Login(user);
+            await _userService.Login(user);
             return Ok($"Login Successful. Your token: {user.Token}");
         }
 
