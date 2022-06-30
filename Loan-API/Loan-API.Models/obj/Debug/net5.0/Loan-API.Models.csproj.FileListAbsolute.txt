@@ -1,0 +1,12 @@
+C:\Users\User\Desktop\Loan-API\Loan-API\Loan-API.Models\bin\Debug\net5.0\Loan-API.Models.deps.json
+C:\Users\User\Desktop\Loan-API\Loan-API\Loan-API.Models\bin\Debug\net5.0\Loan-API.Models.dll
+C:\Users\User\Desktop\Loan-API\Loan-API\Loan-API.Models\bin\Debug\net5.0\Loan-API.Models.pdb
+C:\Users\User\Desktop\Loan-API\Loan-API\Loan-API.Models\obj\Debug\net5.0\Loan-API.Models.csproj.AssemblyReference.cache
+C:\Users\User\Desktop\Loan-API\Loan-API\Loan-API.Models\obj\Debug\net5.0\Loan-API.Models.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\User\Desktop\Loan-API\Loan-API\Loan-API.Models\obj\Debug\net5.0\Loan-API.Models.AssemblyInfoInputs.cache
+C:\Users\User\Desktop\Loan-API\Loan-API\Loan-API.Models\obj\Debug\net5.0\Loan-API.Models.AssemblyInfo.cs
+C:\Users\User\Desktop\Loan-API\Loan-API\Loan-API.Models\obj\Debug\net5.0\Loan-API.Models.csproj.CoreCompileInputs.cache
+C:\Users\User\Desktop\Loan-API\Loan-API\Loan-API.Models\obj\Debug\net5.0\Loan-API.Models.dll
+C:\Users\User\Desktop\Loan-API\Loan-API\Loan-API.Models\obj\Debug\net5.0\refint\Loan-API.Models.dll
+C:\Users\User\Desktop\Loan-API\Loan-API\Loan-API.Models\obj\Debug\net5.0\Loan-API.Models.pdb
+C:\Users\User\Desktop\Loan-API\Loan-API\Loan-API.Models\obj\Debug\net5.0\ref\Loan-API.Models.dll

@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 
 namespace Loan_API.Domain
 {
@@ -20,6 +19,7 @@ namespace Loan_API.Domain
         public bool IsBlocked { get; set; }
         public string Role { get; set; }
         public List<Loan> Loans { get; set; } = new List<Loan>();
+        public string Token { get; set; }
 
 
     }
