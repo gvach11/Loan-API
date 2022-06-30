@@ -61,9 +61,9 @@ namespace Loan_API.Controllers
         //Login
         [AllowAnonymous]
         [HttpPost("login")]
-        public IActionResult Login(string username, string password)
+        public IActionResult Login(LoginModel model)
         {
-            var user = _userService.Authenticate(username, password);
+            var user = _userService.Authenticate(model.UserName, model.Password);
             if (user == null) {
                 _logger.LogError("Username or Password incorrect");
                 return BadRequest("Username or Password incorrect"); }
