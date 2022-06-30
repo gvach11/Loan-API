@@ -1,10 +1,6 @@
 ﻿using FluentValidation;
-using FluentValidation.Results;
-using Loan_API;
 using Loan_API.Data;
-using Loan_API.Domain;
 using Loan_API.Models;
-using System.Collections.Generic;
 using System.Linq;
 
 namespace Loan_API.Services

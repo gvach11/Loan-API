@@ -1,20 +1,11 @@
 ﻿using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using FluentValidation;
-using FluentValidation.Results;
 using Loan_API.Domain;
 using Loan_API.Data;
 using Loan_API.Services;
-using Microsoft.Extensions.Options;
-using System.IdentityModel.Tokens.Jwt;
-using System.Text;
-using Microsoft.IdentityModel.Tokens;
-using System.Security.Claims;
 using Loan_API.Models;
 using Loan_API.Helpers;
 using System.Threading.Tasks;
-using System.Linq;
 using Microsoft.Extensions.Logging;
 
 namespace Loan_API.Controllers

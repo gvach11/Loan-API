@@ -1,5 +1,4 @@
-﻿using Loan_API;
-using Loan_API.Data;
+﻿using Loan_API.Data;
 using Loan_API.Domain;
 using Loan_API.Models;
 using Loan_API.Helpers;

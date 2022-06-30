@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace Loan_API.Domain
+﻿namespace Loan_API.Domain
 {
     public class Loan
     {

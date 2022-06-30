@@ -1,11 +1,8 @@
 ﻿using Loan_API.Domain;
-using Loan_API.Helpers;
 using Loan_API.Models;
 using Loan_API.Services;
-using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace Loan_API.Tests.FakeServices

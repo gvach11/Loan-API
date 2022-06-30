@@ -1,16 +1,9 @@
-﻿using Loan_API;
-using Loan_API.Data;
+﻿using Loan_API.Data;
 using Loan_API.Domain;
 using Loan_API.Models;
 using Loan_API.Helpers;
 using System.Linq;
-using System.IdentityModel.Tokens.Jwt;
-using System.Text;
 using Microsoft.Extensions.Options;
-using Microsoft.IdentityModel.Tokens;
-using System.Security.Claims;
-using System;
-using Microsoft.AspNetCore.Http;
 using System.Threading.Tasks;
 
 namespace Loan_API.Services

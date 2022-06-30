@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace Loan_API.Models
+﻿namespace Loan_API.Models
 {
     public class RegistrationModel
     {

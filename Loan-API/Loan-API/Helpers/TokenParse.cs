@@ -1,24 +1,7 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using System;
-using System.Collections.Generic;
+﻿using System;
 using System.Linq;
-using System.Threading.Tasks;
-using FluentValidation;
-using FluentValidation.Results;
-using Loan_API.Domain;
-using Loan_API.Data;
-using Microsoft.AspNetCore.Authorization;
-using Loan_API.Services;
-using Microsoft.Extensions.Options;
-using System.IdentityModel.Tokens.Jwt;
-using System.Text;
-using Microsoft.IdentityModel.Tokens;
 using System.Security.Claims;
-using Loan_API.Models;
-using Loan_API.Helpers;
-using Microsoft.Extensions.Logging;
 using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Identity;
 
 namespace Loan_API.Helpers
 {
