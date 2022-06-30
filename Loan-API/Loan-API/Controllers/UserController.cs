@@ -17,6 +17,7 @@ using System.Security.Claims;
 using Loan_API.Models;
 using Loan_API.Helpers;
 using Microsoft.Extensions.Logging;
+using Microsoft.AspNetCore.Http;
 
 namespace Loan_API.Controllers
 {
@@ -33,7 +34,6 @@ namespace Loan_API.Controllers
             _context = context;
             _userService = userService;
             _logger = logger;
-
         }
 
 
@@ -69,6 +69,14 @@ namespace Loan_API.Controllers
                 return BadRequest("Username or Password incorrect"); }
             _userService.Login(user);
             return Ok($"Login Successful. Your token: {user.Token}");
+        }
+
+        //Own Data
+        [HttpGet("owndata")]
+        public IActionResult GetOwnData()
+        {
+            var userData = _userService.GetOwnData();
+            return Ok(userData);
         }
     }
 

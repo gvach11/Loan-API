@@ -11,15 +11,16 @@ using Microsoft.IdentityModel.Tokens;
 using System.Security.Claims;
 using System;
 using Microsoft.AspNetCore.Http;
+using System.Threading.Tasks;
 
 namespace Loan_API.Services
 {
     public interface ILoanService
     {
-        public Loan AddLoan(AddLoanModel loanModel, int userId);
+        public Task <Loan> AddLoan(AddLoanModel loanModel, int userId);
         public IQueryable<Loan> GetOwnLoans(int userId);
-        public Loan UpdateOwnLoan(UpdateLoanModel model);
-        public Loan DeleteOwnLoan(int loanId);
+        public Task <Loan> UpdateOwnLoan(UpdateLoanModel model);
+        public Task <Loan> DeleteOwnLoan(int loanId);
     }
 
     public class LoanService : ILoanService
@@ -31,7 +32,7 @@ namespace Loan_API.Services
             _context = context;
             _appSettings = appSettings.Value;
         }
-        public Loan AddLoan(AddLoanModel loanModel, int userId)
+        public async Task<Loan> AddLoan(AddLoanModel loanModel, int userId)
         {
             var newLoan = new Loan();
             newLoan.UserId = userId;
@@ -40,7 +41,7 @@ namespace Loan_API.Services
             newLoan.Amount = loanModel.Amount;
             newLoan.Period = loanModel.LoanPeriod;
             _context.Loans.Add(newLoan);
-            _context.SaveChanges();
+            await _context.SaveChangesAsync();
             return newLoan;
 
         }
@@ -50,7 +51,7 @@ namespace Loan_API.Services
             return _context.Loans.Where(loan => loan.UserId == userId);
         }
 
-        public Loan UpdateOwnLoan(UpdateLoanModel model)
+        public async Task<Loan> UpdateOwnLoan(UpdateLoanModel model)
         {
             var tempLoan = new Loan() { Id = model.LoanId};
             if (model.LoanType != null) tempLoan.Type = model.LoanType;
@@ -65,11 +66,11 @@ namespace Loan_API.Services
 
         }
 
-        public Loan DeleteOwnLoan(int loanId)
+        public async Task<Loan> DeleteOwnLoan(int loanId)
         {
             var loanToDelete = _context.Loans.Find(loanId);
             _context.Loans.Remove(loanToDelete);
-            _context.SaveChanges();
+            await _context.SaveChangesAsync();
             return loanToDelete;
         }
     }

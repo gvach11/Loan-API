@@ -103,7 +103,7 @@ namespace Loan_API.Controllers
                 return BadRequest(ValidationErrorParse.GetErrors(result));
             }
             _context.Loans.Update(tempLoan);
-            _context.SaveChanges();
+            await _context.SaveChangesAsync();
             return Ok("Loan Updated");
         }
         [AllowAnonymous]

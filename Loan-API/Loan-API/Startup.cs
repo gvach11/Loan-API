@@ -19,6 +19,7 @@ using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Loan_API.Helpers;
+using Microsoft.AspNetCore.Http;
 
 namespace Loan_API
 {
@@ -45,9 +46,12 @@ namespace Loan_API
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "Loan_API", Version = "v1" });
             });
 
+
+            services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
+            services.AddScoped<ITokenParse, TokenParse>();
             services.AddScoped<IUserService, UserService>();
             services.AddScoped<ILoanService, LoanService>();
-            services.AddScoped<IAccountantService, AccountService>();
+            services.AddScoped<IAccountantService, AccountantService>();
 
 
 

@@ -25,12 +25,12 @@ namespace Loan_API.Services
         public Task<User> GenerateAccountant();
     }
 
-    public class AccountService : IAccountantService
+    public class AccountantService : IAccountantService
     {
         private UserContext _context;
         private readonly AppSettings _appSettings;
         private UserService _userService;
-        public AccountService(UserContext context, IOptions<AppSettings> appSettings)
+        public AccountantService(UserContext context, IOptions<AppSettings> appSettings)
         {
             _context = context;
             _appSettings = appSettings.Value;
@@ -40,7 +40,7 @@ namespace Loan_API.Services
             var tempUser = _context.Users.Find(userId);
             tempUser.IsBlocked = true;
             _context.Users.Update(tempUser);
-            _context.SaveChanges();
+            await _context.SaveChangesAsync();
             return tempUser;
         }
         public async Task<User> UnblockUser(int userId)
@@ -48,7 +48,7 @@ namespace Loan_API.Services
             var tempUser = _context.Users.Find(userId);
             tempUser.IsBlocked = false;
             _context.Users.Update(tempUser);
-            _context.SaveChanges();
+            await _context.SaveChangesAsync();
             return tempUser;
         }
 
@@ -57,7 +57,7 @@ namespace Loan_API.Services
 
             var loanToDelete = _context.Loans.Find(loanId);
             _context.Loans.Remove(loanToDelete);
-            _context.SaveChanges();
+            await _context.SaveChangesAsync();
             return loanToDelete;
         }
 
@@ -68,7 +68,7 @@ namespace Loan_API.Services
 
         public async Task<Loan> UpdateAnyLoan(UpdateLoanModel model)
         {
-            var tempLoan = _context.Loans.Find(model.LoanId);
+            var tempLoan = await _context.Loans.FindAsync(model.LoanId);
             if (model.LoanType != null) tempLoan.Type = model.LoanType;
             else tempLoan.Type = _context.Loans.Where(loan => loan.Id == model.LoanId).FirstOrDefault().Type;
             if (model.Currency != null) tempLoan.Currency = model.Currency;
@@ -93,8 +93,8 @@ namespace Loan_API.Services
                 Role = "Accountant",
                 IsBlocked = false
             };
-            _context.Users.Add(accountant);
-            _context.SaveChanges();
+            await _context.Users.AddAsync(accountant);
+            await _context.SaveChangesAsync();
             return accountant;
 
         }

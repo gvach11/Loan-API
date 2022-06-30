@@ -10,12 +10,13 @@ using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using System.Security.Claims;
 using System;
+using System.Threading.Tasks;
 
 namespace Loan_API.Services
 {
     public interface IUserService
     {
-        User Register(RegistrationModel user);
+        public Task <User> Register(RegistrationModel user);
         User Authenticate(string username, string password);
         User Login(User user);
         User GetOwnData();
@@ -26,13 +27,15 @@ namespace Loan_API.Services
     {
         private UserContext _context;
         private readonly AppSettings _appSettings;
-        public UserService(UserContext context, IOptions<AppSettings> appSettings)
+        private readonly ITokenParse _tokenParse;
+        public UserService(UserContext context, IOptions<AppSettings> appSettings, ITokenParse tokenParse)
         {
             _context = context;
             _appSettings = appSettings.Value;
+            _tokenParse = tokenParse;
         }
 
-        public User Register(RegistrationModel regData)
+        public async Task <User> Register(RegistrationModel regData)
         {
 
             var user = new User();
@@ -42,7 +45,7 @@ namespace Loan_API.Services
             user.Password = HashService.HashPassword(regData.Password);
             user.Age = regData.Age;
             user.Salary = regData.Salary;
-            _context.Users.Add(user);
+            await _context.Users.AddAsync(user);
             return user;
         }
 
@@ -102,7 +105,9 @@ namespace Loan_API.Services
 
         public User GetOwnData()
         {
-            throw new System.NotImplementedException();
+            var userId = _tokenParse.GetUserId();
+            var currentUser = _context.Users.Find(userId);
+            return currentUser;
         }
     }
 }

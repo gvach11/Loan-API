@@ -29,24 +29,19 @@ namespace Loan_API.Controllers
         private readonly UserContext _context;
         private ILoanService _loanService;
         private readonly ILogger<LoanController> _logger;
+        private readonly IUserService _userService;
 
-        public LoanController(UserContext context, ILoanService loanService, ILogger<LoanController> logger)
+        public LoanController(UserContext context, ILoanService loanService, ILogger<LoanController> logger, IUserService userservice)
         {
             _context = context;
             _loanService = loanService;
             _logger = logger;
+            _userService = userservice;
         }
 
-        internal int GetUid()
-        {
-            var claimsIdentity = this.User.Identity as ClaimsIdentity;
-            var userIdString = claimsIdentity.FindFirst(ClaimTypes.Name)?.Value;
-            var userId = Convert.ToInt32(userIdString);
-            return userId;
-        }
 
         [Authorize(Roles = Roles.User)]
-        [HttpPost("addloan")]
+        [HttpPost("newloan")]
         public IActionResult AddLoan(AddLoanModel addLoanModel)
         {
             LoanValidator validator = new LoanValidator(_context);
@@ -57,9 +52,9 @@ namespace Loan_API.Controllers
                 {
                     _logger.LogError(error);
                 }
-                return BadRequest(ValidationErrorParse.GetErrors(result));
+                return BadRequest(ValidationErrorParse.GetErrors(result));  
             }
-            var userId = GetUid();
+            var userId = _userService.GetOwnData().Id;
             if (_context.Users.Find(userId).IsBlocked == true) {
                 _logger.LogError("User blocked");
                 return Unauthorized("The user is blocked"); }
@@ -69,10 +64,10 @@ namespace Loan_API.Controllers
         }
 
         [Authorize(Roles = Roles.User)]
-        [HttpGet("getownloans")]
+        [HttpGet("ownloans")]
         public IActionResult GetOwnLoans()
         {
-            var userId = GetUid();
+            var userId = _userService.GetOwnData().Id; 
             return Ok(_loanService.GetOwnLoans(userId));
         }
 
@@ -81,7 +76,7 @@ namespace Loan_API.Controllers
         public IActionResult UpdateOwnLoan(UpdateLoanModel model)
         {
             LoanValidator validator = new LoanValidator(_context);
-            var userId = GetUid();
+            var userId = _userService.GetOwnData().Id;
             var tempLoan = _loanService.UpdateOwnLoan(model);
             tempLoan.UserId = userId;
             if (tempLoan.UserId != _context.Loans.Find(model.LoanId).UserId) 
@@ -109,7 +104,7 @@ namespace Loan_API.Controllers
         [HttpDelete("deleteownloan")]
         public async Task<IActionResult> DeleteOwnLoan(LoanIdModel model)
         {
-            var userId = GetUid();
+            var userId = _userService.GetOwnData().Id;
             IQueryable<Loan> ownLoans = _loanService.GetOwnLoans(userId);
             var loanToCheck = ownLoans.Where(loan => loan.Id == model.LoanId).FirstOrDefault();
             if (loanToCheck == null)
